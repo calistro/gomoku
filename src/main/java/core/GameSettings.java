@@ -2,8 +2,8 @@ package core;
 
 import events.SettingsListener;
 import players.Player;
-import players.negamax.NegamaxPlayer;
 import players.human.HumanPlayer;
+import players.minmax.MinMaxPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class GameSettings {
                 return new HumanPlayer(new GameInfo(this, playerIndex,
                         opponentIndex));
             case COMPUTER:
-                return new NegamaxPlayer(new GameInfo(this, playerIndex,
+                return new MinMaxPlayer(new GameInfo(this, playerIndex,
                         opponentIndex));
             default:
                 return null;
