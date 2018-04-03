@@ -1,12 +1,16 @@
 package core;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ResourceBundle;
+
+import javax.imageio.ImageIO;
+
 import gui.Controller;
 import gui.controllers.BoardPaneController;
 import gui.views.BoardPane;
-
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -17,19 +21,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
-import java.util.ResourceBundle;
 
 /**
  * Entry point of the application.
  */
+@SuppressWarnings("restriction")
 public class Main extends Application {
 
-    @Override
+	@Override
     public void start(Stage primaryStage) throws Exception {
         Font.loadFont(getClass().getClassLoader().getResource
                 ("FontAwesome.otf").toExternalForm(), 10);

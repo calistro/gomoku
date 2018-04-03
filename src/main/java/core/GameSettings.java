@@ -14,6 +14,8 @@ import java.util.List;
 public class GameSettings {
 
     public enum PlayerType { HUMAN, COMPUTER }
+    
+    public static int MAX_LEVEL = 5;
 
     private PlayerType player1;
     private PlayerType player2;

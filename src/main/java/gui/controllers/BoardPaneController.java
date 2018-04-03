@@ -10,9 +10,10 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
+@SuppressWarnings("restriction")
 public class BoardPaneController implements Controller {
 
-    private EventHandler<MouseEvent> mouseListener;
+	private EventHandler<MouseEvent> mouseListener;
     private final BoardPane boardView;
     private Game game;
 
@@ -61,7 +62,7 @@ public class BoardPaneController implements Controller {
     /**
      * Handle the settingsChanged() event.
      */
-    private void handleSettingsChanged() {
+	private void handleSettingsChanged() {
         // Update the board size and clear
         Platform.runLater(() -> boardView.setIntersections(game.getSettings()
                 .getSize()));
