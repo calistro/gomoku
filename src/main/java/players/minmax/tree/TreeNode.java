@@ -1,9 +1,11 @@
 package players.minmax.tree;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import core.Move;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -78,6 +80,16 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 	public Iterator<TreeNode<T>> iterator() {
 		TreeNodeIter<T> iter = new TreeNodeIter<T>(this);
 		return iter;
+	}
+
+	public ArrayList<Move> getTheChosenOne() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void updateAlphaBetaFather() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
