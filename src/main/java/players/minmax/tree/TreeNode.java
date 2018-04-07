@@ -4,9 +4,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import core.Move;
 import lombok.Getter;
 import lombok.Setter;
+
+import core.Move;
 
 @Setter
 @Getter
@@ -15,17 +16,17 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 	private T data;
 	private TreeNode<T> parent;
 	private List<TreeNode<T>> children;
-	
+
 	private int alpha;
 	private int beta;
 	private Move theChosenOne;
-	
+
 	public boolean isRoot() {
-		return parent == null;
+		return this.parent == null;
 	}
 
 	public boolean isLeaf() {
-		return children.size() == 0;
+		return this.children.size() == 0;
 	}
 
 	private List<TreeNode<T>> elementsIndex;
@@ -46,23 +47,26 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 	}
 
 	public int getLevel() {
-		if (this.isRoot())
+		if (this.isRoot()) {
 			return 0;
-		else
-			return parent.getLevel() + 1;
+		} else {
+			return this.parent.getLevel() + 1;
+		}
 	}
 
 	private void registerChildForSearch(TreeNode<T> node) {
-		elementsIndex.add(node);
-		if (parent != null)
-			parent.registerChildForSearch(node);
+		this.elementsIndex.add(node);
+		if (this.parent != null) {
+			this.parent.registerChildForSearch(node);
+		}
 	}
 
 	public TreeNode<T> findTreeNode(Comparable<T> cmp) {
 		for (TreeNode<T> element : this.elementsIndex) {
 			T elData = element.data;
-			if (cmp.compareTo(elData) == 0)
+			if (cmp.compareTo(elData) == 0) {
 				return element;
+			}
 		}
 
 		return null;
@@ -70,7 +74,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
 	@Override
 	public String toString() {
-		return data != null ? data.toString() : "[data null]";
+		return this.data != null ? this.data.toString() : "[data null]";
 	}
 
 	@Override
@@ -81,6 +85,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
 	public Move getTheChosenOne() {
 		return this.theChosenOne;
+
 	}
 
 }
