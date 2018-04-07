@@ -4,22 +4,21 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import core.Move;
 import lombok.Getter;
 import lombok.Setter;
 
+@Setter
+@Getter
 public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
-	public T data;
-	public TreeNode<T> parent;
-	public List<TreeNode<T>> children;
-
-	@Getter
-	@Setter
-	private int alpha;
+	private T data;
+	private TreeNode<T> parent;
+	private List<TreeNode<T>> children;
 	
-	@Getter
-	@Setter
+	private int alpha;
 	private int beta;
+	private Move theChosenOne;
 	
 	public boolean isRoot() {
 		return parent == null;
@@ -78,6 +77,10 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 	public Iterator<TreeNode<T>> iterator() {
 		TreeNodeIter<T> iter = new TreeNodeIter<T>(this);
 		return iter;
+	}
+
+	public Move getTheChosenOne() {
+		return this.theChosenOne;
 	}
 
 }

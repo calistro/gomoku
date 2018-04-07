@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import lombok.Getter;
+
 /**
  * State for a Gomoku game.
  */
 public class GameState {
 
+	@Getter
     private int size;
     private int[][] board;
     private Stack<Move> moves;
     private int currentIndex = 1;
 
-    // Bottom left to upper right
-    private final int[] BOTTOM_LEFT_DIAGONAL = {0, 0};
-    
     /**
      * Create a new game state.
      * @param size Board size
@@ -63,19 +63,6 @@ public class GameState {
         return !moves.isEmpty() ? moves.peek() : null;
     }
     
-    /**
-     * 
-     * 
-     */
-    public ArrayList<Move> getLastTwoMoves() {
-    	ArrayList<Move> lastMoves = new ArrayList<Move>();
-    	if(!moves.isEmpty()){
-    		lastMoves.add(moves.peek());
-    		lastMoves.add(moves.get(moves.size() - 2));
-    	}
-    	return lastMoves;
-    }
-
     /**
      * Make a move on this state.
      * @param move Move to make

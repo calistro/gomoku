@@ -2,6 +2,7 @@ package players.minmax;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import core.GameInfo;
 import core.GameState;
@@ -16,55 +17,72 @@ public class MinMaxPlayer extends Player {
 	}
 
 	@Override
-	public Move getMove(GameState state) {
-		TreeNode<GameState> root = this.generateFirstIndexTree(state.getLastTwoMoves());
-		Move best = this.getBestMoveFromRoot(root);
-		
-		// The root will not have child if there is no place left to play based on the last two moves.
-		// So it's necessary to analyze all the possibilities from the board;
-		if(best != null){
+	public Move getMove(GameState gameState) {
+		if(this.notFistMove(gameState)){
+			State state = State.clone(gameState);
+			TreeNode<State> root = new TreeNode<State>(state);
+			this.generateChildren(root);
+			
+			this.calculateMove(root);
+			Move best = root.getTheChosenOne();
+			
 			return best;
 		}
 		else {
-			this.calculateNewBest(state);
-			return null;
+			return this.firstMove();
 		}
 	}
 	
-	/**
-	 * 
-	 * @return 
-	 */
-	private TreeNode<GameState> generateFirstIndexTree(ArrayList<Move> lastMoves) {
-
-		return null;
+	private void generateChildren(TreeNode<State> node) {
+		State state = node.getData();
+		
+		Move lastMove = state.getMoveStack().peek();
+		HashSet<Move> children = state.getNearestMoves(lastMove);
+		
+		state.undoMove(lastMove);
+		children.addAll(state.getNearestMoves(state.getMoveStack().peek()));
+		
+		this.calculatePartialScore();
+		
+		ArrayList<Move> lastTwoMoves = state.getLastTwoMoves();
 	}
-
-	private Move getBestMoveFromRoot(TreeNode<GameState> root){
+	
+	private void calculateMove(TreeNode<State> node){
 		Move best = null;
 		
-		for(TreeNode<GameState> node : root.children){
-			this.calculateBestMove(node);
-			Move candidate = node.getTheChosenOne();
+		for(TreeNode<State> child : node.getChildren()){
+			this.calculateBestMove(child);
+			Move candidate = child.getTheChosenOne();
 			best = this.isBest(best, candidate) ? best : candidate; 
 		}
 		
-		return best;
+		node.setTheChosenOne(best);
 	}
 	
-	private void calculateBestMove(TreeNode<GameState> node){
+	private void calculateBestMove(TreeNode<State> node){
 		if(!node.isLeaf()){
-			this.generatePossibleMoves(node);
-			for(TreeNode<GameState> child : node.children){
-				this.getBestMove(child);
+			this.generateChildren(node);
+			for(TreeNode<State> child : node.getChildren()){
+				this.calculateMove(child);
 			}
-			node.getMinMax()
 		}	
 		else{
 			this.calculateScore(node);
 			node.updateAlphaBetaFather();
 		}
 	}
-
+	
+	private boolean notFistMove(GameState state){
+		return state.getMoves().size() < 1;
+	}
+	
+	private Move fistMove(){
+		return null;
+	}
+	
+	private boolean isBest(Move best, Move candidate) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
