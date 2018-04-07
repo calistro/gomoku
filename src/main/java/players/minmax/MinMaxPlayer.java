@@ -27,7 +27,7 @@ public class MinMaxPlayer extends Player {
 			Move best = root.getTheChosenOne();
 			
 			return best;
-		}
+		}		
 		else {
 			return this.firstMove();
 		}
@@ -36,15 +36,23 @@ public class MinMaxPlayer extends Player {
 	private void generateChildren(TreeNode<State> node) {
 		State state = node.getData();
 		
+		//Add all the nearest moves based on the last two moves and if there is no Move possible to be made, is added all the others possibilities 
 		Move lastMove = state.getMoveStack().peek();
-		HashSet<Move> children = state.getNearestMoves(lastMove);
+		HashSet<Move> moves = state.getNearestMoves(lastMove);
 		
 		state.undoMove(lastMove);
-		children.addAll(state.getNearestMoves(state.getMoveStack().peek()));
+		moves.addAll(state.getNearestMoves(state.getMoveStack().peek())); 
+		moves.remove(lastMove); // If the last move made was one of the nearest, need to be removed
 		
-		this.calculatePartialScore();
+		if(moves.isEmpty()){
+			moves.addAll(state.getAllPossibleMoves());
+		}
 		
-		ArrayList<Move> lastTwoMoves = state.getLastTwoMoves();
+		for(Move move : moves){
+			node.addChild(this.calculatePartialScore(state, move));
+		}
+		
+		
 	}
 	
 	private void calculateMove(TreeNode<State> node){
@@ -76,8 +84,10 @@ public class MinMaxPlayer extends Player {
 		return state.getMoves().size() < 1;
 	}
 	
-	private Move fistMove(){
-		return null;
+	private Move firstMove(){
+		Move move = new Move();
+		
+		return move;
 	}
 	
 	private boolean isBest(Move best, Move candidate) {

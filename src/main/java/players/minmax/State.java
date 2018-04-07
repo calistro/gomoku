@@ -1,11 +1,11 @@
 package players.minmax;
+import java.util.HashSet;
+import java.util.Stack;
+import java.util.concurrent.ThreadLocalRandom;
+
 import core.GameState;
 import core.Move;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Internal game state representation for the AI.
@@ -17,7 +17,10 @@ public class State {
      * field (intersection) on the Gomoku board. A field can either be empty
      * (0), 1/2 (occupied by a player) or 3 which is an out of bounds field,
      * used for detecting that a field is at/near the edge of the board.
-     *
+	*/
+	protected final Field[][] board;
+    
+	/**
      * Board directions are stored in a 4D array. This 4D array maps each field
      * on the board to a set of neighbouring fields, 4 on each side of the
      * stone, forming a star pattern:
@@ -40,7 +43,6 @@ public class State {
      * [2][0-9] -> Vertical from top to bottom
      * [3][0-9] -> Horizontal from left to right
      */
-    protected final Field[][] board;
     protected final Field[][][][] directions;
 
     // The current player
@@ -54,16 +56,16 @@ public class State {
     @Getter
     private Stack<Move> moveStack;
     
-    public State(int intersections) {
-        this.board = new Field[intersections][intersections];
-        for(int i = 0; i < intersections; i++) {
-            for(int j = 0; j < intersections; j++) {
+    public State(int size) {
+        this.board = new Field[size][size];
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
                 board[i][j] = new Field(i, j);
             }
         }
-        this.directions = new Field[intersections][intersections][4][9];
+        this.directions = new Field[size][size][4][9];
         this.currentIndex = 1;
-        this.zobristKeys = new long[2][intersections][intersections];
+        this.zobristKeys = new long[2][size][size];
         this.zobristHash = 0;
         this.moveStack = new Stack<>();
         this.generateDirections(board);
@@ -237,16 +239,38 @@ public class State {
     protected int getMoves() {
         return moveStack.size();
     }
+    
+    public HashSet<Move> getNearestMoves(Move move) {
+    	HashSet<Move> nearestMoves = new HashSet<Move>();
 
-    public ArrayList<Move> getLastTwoMoves() {
-    	ArrayList<Move> lastMoves = new ArrayList<Move>();
-    	if(!moveStack.isEmpty()){
-    		lastMoves.add(moveStack.peek());
-    		lastMoves.add(moveStack.get(moveStack.size() - 2));
+    	for(int direction = 0; direction < 4; direction++){
+    		for(int idField = 0; idField < 9; idField++){
+    			Field field = this.directions[move.row][move.col][direction][idField];
+    	    	if(this.currentIndex == field.index){
+    	    		nearestMoves.add(new Move(field.row, field.col));
+    	    	}
+    		}
     	}
-    	return lastMoves;
+    	
+    	return nearestMoves;
     }
     
+    public HashSet<Move> getAllPossibleMoves(){
+    	HashSet<Move> nearestMoves = new HashSet<Move>();
+    	
+    	for(int row = 0; row < this.board.length; row++){
+    		for(int col = 0; col < this.board[row].length; col++){
+    			Field field = this.board[row][col];
+    	    	if(this.currentIndex == field.index){
+    	    		nearestMoves.add(new Move(field.row, field.col));
+    	    	}
+    		}
+    	}
+    	
+    	return nearestMoves;
+    }
+    
+
 	public static State clone(GameState state) {
 		State newState = new State(state.getSize());
 		
